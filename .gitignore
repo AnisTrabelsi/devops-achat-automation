@@ -1,0 +1,11 @@
+# Backend - Spring Boot
+/target/
+*.log
+
+# Frontend - Angular
+/node_modules/
+/dist/
+
+# IDEs
+.idea/
+*.iml
