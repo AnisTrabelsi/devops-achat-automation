@@ -1,6 +1,9 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
+// Indique à Karma où trouver le binaire Chromium
+process.env.CHROME_BIN = '/usr/bin/chromium-browser';
+
 module.exports = function (config) {
   config.set({
     basePath: '',
@@ -14,15 +17,12 @@ module.exports = function (config) {
     ],
     client: {
       jasmine: {
-        // you can add configuration options for Jasmine here
-        // the possible options are listed at https://jasmine.github.io/api/edge/Configuration.html
-        // for example, you can disable the random execution with `random: false`
-        // or set a specific seed with `seed: 4321`
+        // tu peux configurer Jasmine ici (random, seed, etc.)
       },
-      clearContext: false // leave Jasmine Spec Runner output visible in browser
+      clearContext: false // laisse le spec runner visible
     },
     jasmineHtmlReporter: {
-      suppressAll: true // removes the duplicated traces
+      suppressAll: true // supprime les traces dupliquées
     },
     coverageReporter: {
       dir: require('path').join(__dirname, './coverage/achat-frontend'),
@@ -37,7 +37,8 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    // Passe de 'Chrome' à 'ChromeHeadless' pour CI / VM sans interface graphique
+    browsers: ['ChromeHeadless'],
     singleRun: false,
     restartOnFileChange: true
   });
