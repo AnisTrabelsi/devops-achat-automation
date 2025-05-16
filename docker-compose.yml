@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8
+    container_name: achat-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: vvvv
+      MYSQL_DATABASE: achatdb
+      MYSQL_USER: achatdb
+      MYSQL_PASSWORD: vvvv
+    ports:
+      - "3307:3306"
+    volumes:
+      - achat-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pvvvv"]
+      interval: 10s
+      retries: 10
+
+  backend:
+    image: anis477/achat-backend-anistrabelsi-1s5:latest
+    container_name: achat-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8089:8089"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/achatdb
+      SPRING_DATASOURCE_USERNAME: achatdb
+      SPRING_DATASOURCE_PASSWORD: vvvv
+    restart: on-failure
+
+  frontend:
+    image: anis477/achat-frontend-anis477-1s5:latest
+    container_name: achat-frontend
+    depends_on:
+      - backend
+    ports:
+      - "4202:80"
+    restart: on-failure
+
+volumes:
+  achat-db-data:
