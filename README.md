@@ -32,10 +32,10 @@ Ce projet met en œuvre une chaîne complète d’intégration et de déploiemen
 
 ## 📂 Structure du projet
 
-- `back/` : Spring Boot – API REST pour la gestion des achats
-- `front/` : Angular – Interface utilisateur
-- `ci-cd/` : Fichiers Jenkinsfile, configuration SonarQube, Prometheus, Grafana
-- `docker/` : Dockerfiles et docker-compose.yml
+- `backend/` : Application Spring Boot – API REST pour la gestion des achats
+- `frontend/` : Application Angular – Interface utilisateur
+- `ci-cd/` : Pipelines Jenkins, configuration SonarQube, Prometheus et Grafana
+- `docker/` : Dockerfiles et fichier `docker-compose.yml`
 
 ---
 
