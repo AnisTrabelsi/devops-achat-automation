@@ -1,0 +1,75 @@
+pipeline {
+    agent any
+
+    environment {
+        SONARQUBE_SERVER = 'SonarQube'
+        SONARQUBE_TOKEN = credentials('sonar-token') // Crée un secret Jenkins contenant ton token Sonar
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-id') // Crée un secret Jenkins Docker Hub
+        NEXUS_URL = 'http://192.168.33.10:8081/repository/npm-releases/'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'master', url: 'https://github.com/AnisTrabelsi/devops-achat-automation-anistrabelsi.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                dir('achat-project/frontend') {
+                    sh 'npm install --legacy-peer-deps'
+                }
+            }
+        }
+
+        stage('Build Angular App') {
+            steps {
+                dir('achat-project/frontend') {
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv("${SONARQUBE_SERVER}") {
+                    dir('achat-project/frontend') {
+                        sh """
+                        npx sonar-scanner \
+                          -Dsonar.projectKey=achat-frontend-anis477-1s5 \
+                          -Dsonar.sources=src \
+                          -Dsonar.host.url=http://192.168.33.10:9000 \
+                          -Dsonar.login=$SONARQUBE_TOKEN
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                dir('achat-project/frontend') {
+                    sh 'docker build -t anis477/achat-frontend-anis477-1s5 .'
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                withDockerRegistry(credentialsId: 'dockerhub-id', url: '') {
+                    sh 'docker push anis477/achat-frontend-anis477-1s5'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Pipeline frontend terminé avec succès !'
+        }
+        failure {
+            echo '❌ Une erreur est survenue dans le pipeline frontend.'
+        }
+    }
+}
