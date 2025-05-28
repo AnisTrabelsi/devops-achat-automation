@@ -39,7 +39,7 @@ Ce projet met en œuvre une chaîne complète d’intégration et de déploiemen
 
 ---
 
-## 🙋 Réalisé par
+##  🙋 Réalisé par
 
 **Anis Trabelsi**  
 Étudiant en ingénierie informatique à Sup Galilée – Université Sorbonne Paris Nord  
